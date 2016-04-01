@@ -1375,8 +1375,9 @@ static void PFObjectAssertValueIsKindOfValidClass(id object) {
     }
 }
 
+//异步保存
 - (BFTask *)saveAsync:(BFTask *)toAwait {
-    PFCurrentUserController *controller = [[self class] currentUserController];
+    PFCurrentUserController *controller = [[self class] z];
     return [[controller getCurrentObjectAsync] continueWithBlock:^id(BFTask *task) {
         PFUser *currentUser = task.result;
         NSString *sessionToken = currentUser.sessionToken;
@@ -1398,7 +1399,7 @@ static void PFObjectAssertValueIsKindOfValidClass(id object) {
 
                 // Snapshot the current set of changes, and push a new changeset into the queue.
                 PFOperationSet *changes = [self unsavedChanges];
-
+                //真正的保存？
                 [self startSave];
                 BFTask *childrenTask = [self _saveChildrenInBackgroundWithCurrentUser:currentUser
                                                                          sessionToken:sessionToken];
@@ -1877,12 +1878,15 @@ static void PFObjectAssertValueIsKindOfValidClass(id object) {
 ///--------------------------------------
 
 - (BFTask *)saveInBackground {
+    //此处应该与Solts的使用有关
     return [self.taskQueue enqueue:^BFTask *(BFTask *toAwait) {
+        //这里才是真正的保存操作
         return [self saveAsync:toAwait];
     }];
 }
 
 - (void)saveInBackgroundWithBlock:(PFBooleanResultBlock)block {
+    //调用后台保存并且在有结果时返回回调
     [[self saveInBackground] thenCallBackOnMainThreadWithBoolValueAsync:block];
 }
 
