@@ -9004,6 +9004,7 @@
 				1B31DBD31CAE5F02008AEFCE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		810156661BB3832700D7C7BD /* Build configuration list for PBXNativeTarget "Parse-watchOS" */ = {
 			isa = XCConfigurationList;
